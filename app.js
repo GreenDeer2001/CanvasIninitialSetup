@@ -1,72 +1,92 @@
-const canvas = document.getElementById("canvas");
-const ctx = canvas.getContext("2d");
+const canvas = document.querySelector('canvas')
+const c = canvas.getContext('2d')
 
-canvas.width = innerWidth;
-canvas.height = innerHeight;
-let colors = ["purple", "yellow", "orange", "grey"];
-ctx.lineWidth = 5;
+canvas.width = innerWidth
+canvas.height = innerHeight
 
-class Circle {
-  constructor(x, y, dx, dy, radius) {
-    this.x = x;
-    this.y = y;
-    // this.velocity = {
-    //   x: dx,
-    //   y: dy,
-    // };
-    this.radius = radius;
-    this.color = colors[Math.floor(Math.random() * colors.length)];
+const mouse = {
+  x: innerWidth / 2,
+  y: innerHeight / 2
+}
 
-    this.draw = function () {
-      ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
+const colors = ['#2185C5', '#7ECEFD', '#FFF6E5', '#FF7F66']
 
-      ctx.strokeStyle = this.color;
-      ctx.stroke();
-      ctx.beginPath();
-    };
+// Event Listeners
+addEventListener('mousemove', (event) => {
+  mouse.x = event.clientX
+  mouse.y = event.clientY
+})
+
+addEventListener('resize', () => {
+  canvas.width = innerWidth
+  canvas.height = innerHeight
+
+  init()
+})
+
+// Objects
+class Object {
+  constructor(x, y, radius, color) {
+    this.x = x
+    this.y = y
+    this.radius = radius
+    this.color = color
+  }
+
+  draw() {
+    c.beginPath()
+    c.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false)
+    c.fillStyle = this.color
+    c.fill()
+    c.closePath()
+  }
+
+  update() {
+    this.draw()
   }
 }
 
-let circles = [];
-init();
+// Implementation
+let objects
 function init() {
-  for (let i = 0; i < 10; i++) {
-    const radius = 30;
-    let x = randomNumber(radius, innerWidth - 2 * radius);
-    let y = randomNumber(radius, innerHeight - 2 * radius);
-    // const dx = randomNumber(-3,6);
-    // const dy = randomNumber(-3,6);
+  objects = []
 
-    if (i !== 0)
-      for (let j = 0; j < circles.length; j++) {
-        if (
-          distance(x, y, circles[j].x, circles[j].y) <
-          radius + circles[j].radius
-        ) {
-          x = randomNumber(radius, innerWidth - radius);
-          y = randomNumber(radius, innerHeight - radius);
-          j = -1;
-        }
-      }
-
-    const circle = new Circle(x, y, radius);
-    // const circle = new Circle(x, y, dx, dy, radius);
-    circle.draw();
-
-    circles.push(circle);
+  for (let i = 0; i < 400; i++) {
+    // objects.push()
   }
+}
+
+// Animation Loop
+function animate() {
+  requestAnimationFrame(animate)
+  c.clearRect(0, 0, canvas.width, canvas.height)
+
+  c.fillText('HTML CANVAS BOILERPLATE', mouse.x, mouse.y)
+  // objects.forEach(object => {
+  //  object.update()
+  // })
+}
+
+init()
+animate()
+
+
+
+
+// utilities
+
+  
+function randomIntFromRange(min, max) {
+  return Math.floor(Math.random() * (max - min + 1) + min)
+}
+
+function randomColor(colors) {
+  return colors[Math.floor(Math.random() * colors.length)]
 }
 
 function distance(x1, y1, x2, y2) {
-  const dist1 = x1 - x2;
-  const dist2 = y1 - y2;
-  return Math.sqrt(Math.pow(dist1, 2) + Math.pow(dist2, 2));
-}
+  const xDist = x2 - x1
+  const yDist = y2 - y1
 
-function randomNumber(min, max) {
-  return Math.floor(Math.random() * max) + min;
+  return Math.sqrt(Math.pow(xDist, 2) + Math.pow(yDist, 2))
 }
-addEventListener("resize", () => {
-  canvas.width = innerWidth;
-  canvas.height = innerHeight;
-});
